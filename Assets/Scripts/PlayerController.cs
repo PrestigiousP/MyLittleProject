@@ -107,6 +107,9 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     rigidBody.velocity = new Vector2(-300, rigidBody.velocity.y);
+
+
+
                 }
             }
         }

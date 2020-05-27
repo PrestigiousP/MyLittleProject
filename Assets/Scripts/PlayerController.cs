@@ -16,24 +16,42 @@ public class PlayerController : MonoBehaviour
     public float groundCheckRadius;
     public int doubleJump = 0;
     private bool isTouchingGround;
-    private PlayerCombatScript PlayerAttackMoves;
+
     //private bool JumpAnimation;
+    public float dashSpeed;
+    private float dashTime;
+    public float startDashTime;
+    private bool canDashAgain;
+    private int direction;
+
 
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         PlayerAnimation = GetComponent<Animator>();
-        PlayerAttackMoves = new PlayerCombatScript();
+        dashTime = startDashTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckGround();
+        //CheckGround();
+        //---------------------touching ground checker-------------------------------
+        isTouchingGround = Physics2D.OverlapCircle(GroundCheckPoint.position, groundCheckRadius, groundLayer);
+        //-------------------------reset les param pour les animations------------------
+        if (isTouchingGround)
+        {
+            PlayerAnimation.ResetTrigger("Jump");
+            PlayerAnimation.SetBool("Landing", false);
+        }
         PlayerMovement();
         HandleLayerAnimations();
-        DashAttack();
+
+
+    
+      
     }
+  
 
     private void PlayerMovement()
     {
@@ -61,9 +79,55 @@ public class PlayerController : MonoBehaviour
         //---------------------set les conditions d'animations-----------------
         PlayerAnimation.SetFloat("run", Mathf.Abs(rigidBody.velocity.x));
         //-----------------------Dash attack-------------------------------
-        
+        if (!isTouchingGround)
+        { 
+           
+           if (direction == 0)
+            {
+                if (Input.GetButtonDown("Fire1") && canDashAgain)
+                {
+                    canDashAgain = false;
+                    if (transform.localScale.x > 0)
+                    {
+                        direction = 1;
+                    }
+                    else if (transform.localScale.x < 0)
+                    {
+                        direction = 2;
+                    }
+                }
+            }
+            else
+            {
+
+                if (dashTime <= 0)
+                {
+                    direction = 0;//reset
+                    //canDashAgain = false;
+                    dashTime = startDashTime;//reset
+                }
+                else
+                {
+                    dashTime -= Time.deltaTime;
+                    if (direction == 1)
+                    {
+                        rigidBody.velocity = Vector2.right * dashSpeed;
+                    }
+                    else if (direction == 2)
+                    {
+                        rigidBody.velocity = Vector2.left * dashSpeed;
+                    }
+                }
+            }
+        }
+        else if(isTouchingGround)
+        {
+            canDashAgain = true;
+        }
+     
     }
-    private void CheckGround()
+  
+    void CheckGround()
     {
         //---------------------touching ground checker-------------------------------
         isTouchingGround = Physics2D.OverlapCircle(GroundCheckPoint.position, groundCheckRadius, groundLayer);
@@ -82,6 +146,7 @@ public class PlayerController : MonoBehaviour
             //call la method qui retourne la valeur pour dash
            
             PlayerAnimation.SetLayerWeight(1, 1);//1er param: prend le layer de l'index 1. 2eme param: set un weigth pour le layer
+
             PlayerAnimation.SetTrigger("Jump");
         }
         else
@@ -94,26 +159,6 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-    void DashAttack()
-    {
-        if (!isTouchingGround)
-        {
-            if (Input.GetButtonDown("Fire1"))
-            {
-                if (transform.localScale.x > 0)
-                {
-                    rigidBody.velocity = new Vector2(300, rigidBody.velocity.y);
-                }
-                else
-                {
-                    rigidBody.velocity = new Vector2(-300, rigidBody.velocity.y);
-
-
-
-                }
-            }
-        }
-
-    }
+    
 
 }

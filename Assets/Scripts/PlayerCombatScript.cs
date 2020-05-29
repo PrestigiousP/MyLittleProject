@@ -39,7 +39,7 @@ public class PlayerCombatScript : MonoBehaviour
         //-----------------Damage them-------------------------------------
         foreach(Collider2D enemy in hitEnemies)
         {
-            Debug.Log(enemy.name);
+           // Debug.Log(enemy.name);
             enemy.GetComponent<WarriorEnemy>().TakeDamage(attack1Damage);
         }
     }

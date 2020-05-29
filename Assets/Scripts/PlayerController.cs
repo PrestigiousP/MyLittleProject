@@ -10,12 +10,14 @@ public class PlayerController : MonoBehaviour
     private float movement = 0f;
     public float jumpSpeed = 5f;
     private Rigidbody2D rigidBody;
+    public LayerMask enemyLayer;
     public LayerMask groundLayer;//objet qui permet de pouvoir check si le player touche le ground
     private Animator PlayerAnimation;//objet qui permet d'utiliser les conditions d'animation de player
     public Transform GroundCheckPoint;//sous-objet de player, qui sert a verifier si le player touche le ground(pour les jumps)
     public float groundCheckRadius;
     public int doubleJump = 0;
     private bool isTouchingGround;
+    private bool onTopOfEnemy;
 
     //private bool JumpAnimation;
     public float dashSpeed;
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         //CheckGround();
         //---------------------touching ground checker-------------------------------
         isTouchingGround = Physics2D.OverlapCircle(GroundCheckPoint.position, groundCheckRadius, groundLayer);
+        onTopOfEnemy = Physics2D.OverlapCircle(GroundCheckPoint.position, groundCheckRadius, enemyLayer);
         //-------------------------reset les param pour les animations------------------
         if (isTouchingGround)
         {
@@ -60,7 +63,7 @@ public class PlayerController : MonoBehaviour
         if (movement > 0f)
         {
             rigidBody.velocity = new Vector2(movement * speed, rigidBody.velocity.y);
-            transform.localScale = new Vector2(1, 1);
+            transform.localScale = new Vector2(1, 1);//x y ?
         }
         else if (movement < 0f)
         {
@@ -72,7 +75,7 @@ public class PlayerController : MonoBehaviour
             rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
         }
         //------------------script pour le saut--------------------------
-        if (Input.GetButtonDown("Jump") && isTouchingGround == true)
+        if (Input.GetButtonDown("Jump") && isTouchingGround == true || Input.GetButtonDown("Jump") && onTopOfEnemy == true)
         {
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpSpeed);
         }

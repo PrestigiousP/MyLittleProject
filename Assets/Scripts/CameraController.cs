@@ -20,9 +20,9 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(rb.velocity.y);
+        //Debug.Log(rb.velocity.y);
         //-------------------------permet a la camera de suivre le player-----------------------------
-        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y + yOffset, -10);
+        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y + yOffset, -15);
         //Pour pouvoir changer la postition d'un objet, il faut absolument creer un vector3
         if (player.transform.localScale.x > 0)
             playerPosition = new Vector3(playerPosition.x + xOffset, playerPosition.y, playerPosition.z);

@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public int maxHealth;
+    private int currentHealth;
     public float speed = 5f;
     private float movement = 0f;
     public float jumpSpeed = 5f;
@@ -32,11 +34,13 @@ public class PlayerController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         PlayerAnimation = GetComponent<Animator>();
         dashTime = startDashTime;
+        currentHealth = maxHealth;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        Debug.Log(rigidBody.velocity);
         //CheckGround();
         //---------------------touching ground checker-------------------------------
         isTouchingGround = Physics2D.OverlapCircle(GroundCheckPoint.position, groundCheckRadius, groundLayer);
@@ -74,7 +78,7 @@ public class PlayerController : MonoBehaviour
         {
             rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
         }
-        //------------------script pour le saut--------------------------
+        //------------------script pour le jump--------------------------
         if (Input.GetButtonDown("Jump") && isTouchingGround == true || Input.GetButtonDown("Jump") && onTopOfEnemy == true)
         {
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpSpeed);
@@ -130,7 +134,7 @@ public class PlayerController : MonoBehaviour
      
     }
   
-    void CheckGround()
+    /*void CheckGround()
     {
         //---------------------touching ground checker-------------------------------
         isTouchingGround = Physics2D.OverlapCircle(GroundCheckPoint.position, groundCheckRadius, groundLayer);
@@ -140,6 +144,14 @@ public class PlayerController : MonoBehaviour
             PlayerAnimation.ResetTrigger("Jump");
             PlayerAnimation.SetBool("Landing", false);
         }
+    }*/
+    public void TakeDamage(float damage)
+    {
+      //  Debug.Log("je prends " + damage);
+        currentHealth -= (int)damage;
+        if (currentHealth <= 0)
+            PlayerAnimation.SetTrigger("Die");//A finir
+        Debug.Log("player mort");
     }
   private void HandleLayerAnimations()
     {

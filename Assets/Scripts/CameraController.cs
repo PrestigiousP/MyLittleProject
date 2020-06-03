@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    private Camera camera;
     public GameObject player;
     private Rigidbody2D rb;
     private Vector3 playerPosition;
@@ -15,6 +16,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         rb = player.GetComponent<Rigidbody2D>();
+        camera = GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -22,7 +24,7 @@ public class CameraController : MonoBehaviour
     {
         //Debug.Log(rb.velocity.y);
         //-------------------------permet a la camera de suivre le player-----------------------------
-        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y + yOffset, -15);
+        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y + yOffset, -10);
         //Pour pouvoir changer la postition d'un objet, il faut absolument creer un vector3
         if (player.transform.localScale.x > 0)
             playerPosition = new Vector3(playerPosition.x + xOffset, playerPosition.y, playerPosition.z);
@@ -38,5 +40,6 @@ public class CameraController : MonoBehaviour
         //Time.deltaTime permet d'avoir le meme rendement peu importe le fps et le type d'ordinateur que la personne utilise.
         transform.position = Vector3.Lerp(transform.position, playerPosition, timerOffset * Time.deltaTime);
         //-----------------------------------------------------------------------------------------------
+        //camera.orthographicSize = 1; //fixe une grandeur pour la caméra
     }
 }

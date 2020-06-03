@@ -9,7 +9,7 @@ public class PlayerCombatScript : MonoBehaviour
     public Transform attackPoint;//object qui sert de detecteur pour le hitbox du hit
     public float attackRange = 0.5f;
     public LayerMask enemyLayer;
-    public Collider2D attack1Collider;//hitbox de l'attack1
+    //public Collider2D attack1Collider;//hitbox de l'attack1
     public int attack1Damage;
     private void Start()
     { 

@@ -44,4 +44,13 @@ public class WarriorEnemy : MonoBehaviour
     {
         isTouchingGround = Physics2D.OverlapCircle(GroundCheckPoint.position, groundCheckRadius, groundLayer);
     }
+   public bool GroundCheck()
+    {
+        if (isTouchingGround)
+            return true;
+        else
+        {
+            return false;
+        }
+    }
 }
